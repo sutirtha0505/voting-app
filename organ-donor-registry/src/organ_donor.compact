@@ -1,0 +1,88 @@
+// This file is part of midnight-network/private-organ-donor-registry.
+// Copyright (C) 2025 Midnight Foundation
+// SPDX-License-Identifier: Apache-2.0
+// Licensed under the Apache License, Version 2.0 (the "License");
+// You may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+pragma language_version >= 0.20;
+import CompactStandardLibrary;
+
+// Public state - tracks total number of registered donors
+export ledger totalDonors: Counter;
+
+// Private state - stores donor's medical compatibility data
+// Only the donor knows their full registration details
+struct DonorRecord {
+  bloodType: Bytes<32>,        // e.g., "A+", "O-", "AB+"
+  organType: Bytes<32>,        // e.g., "kidney", "liver", "heart"
+  tissueMarkers: Bytes<32>,    // simplified HLA markers for compatibility
+  isActive: Boolean         // whether donor is still registered
+}
+
+// Circuit to register as an organ donor
+// Input: donor's medical compatibility information (private)
+// Effect: increments public donor count, stores private donor record
+export circuit registerDonor(
+  bloodType: Bytes<32>,
+  organType: Bytes<32>, 
+  tissueMarkers: Bytes<32>
+): [DonorRecord] {
+  
+  // Increment public counter (hospitals can see total donors)
+  totalDonors.increment(1);
+
+  // Return private record to donor
+  return [DonorRecord {
+    bloodType: bloodType,
+    organType: organType,
+    tissueMarkers: tissueMarkers,
+    isActive: true
+  }];
+}
+
+// Circuit to prove compatibility without revealing identity
+// Input: donor's private record and recipient's requirements (private)
+// Output: proof of compatibility (can be verified by hospital)
+export circuit proveCompatibility(
+  donorRecord: DonorRecord,
+  requiredBloodType: Bytes<32>,
+  requiredOrgan: Bytes<32>,
+  requiredMarkers: Bytes<32>
+): [Boolean] {
+  
+  // Check if donor record is still active
+  assert(donorRecord.isActive, "Donor registration is not active");
+
+  // Verify compatibility
+  return [(donorRecord.bloodType == requiredBloodType)
+      && (donorRecord.organType == requiredOrgan)
+      && (donorRecord.tissueMarkers == requiredMarkers)];
+}
+
+// Circuit to deactivate donor registration
+// Input: donor's private record
+// Effect: marks donor as inactive
+export circuit deactivateDonor(
+  donorRecord: DonorRecord
+): [DonorRecord] {
+  
+  // Decrement public counter
+  totalDonors.increment(0 - 1);
+
+  // Return updated record
+  return [DonorRecord {
+    bloodType: donorRecord.bloodType,
+    organType: donorRecord.organType,
+    tissueMarkers: donorRecord.tissueMarkers,
+    isActive: false
+  }];
+}

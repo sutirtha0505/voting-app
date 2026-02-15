@@ -1,0 +1,230 @@
+{
+  "compiler-version": "0.29.0",
+  "language-version": "0.21.0",
+  "runtime-version": "0.14.0",
+  "circuits": [
+    {
+      "name": "registerDonor",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "bloodType",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "organType",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "tissueMarkers",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+          {
+            "type-name": "Struct",
+            "name": "DonorRecord",
+            "elements": [
+              {
+                "name": "bloodType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "organType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "tissueMarkers",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "isActive",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "proveCompatibility",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "donorRecord",
+          "type": {
+            "type-name": "Struct",
+            "name": "DonorRecord",
+            "elements": [
+              {
+                "name": "bloodType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "organType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "tissueMarkers",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "isActive",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "requiredBloodType",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "requiredOrgan",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "requiredMarkers",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+          {
+            "type-name": "Boolean"
+          }
+        ]
+      }
+    },
+    {
+      "name": "deactivateDonor",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "donorRecord",
+          "type": {
+            "type-name": "Struct",
+            "name": "DonorRecord",
+            "elements": [
+              {
+                "name": "bloodType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "organType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "tissueMarkers",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "isActive",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+          {
+            "type-name": "Struct",
+            "name": "DonorRecord",
+            "elements": [
+              {
+                "name": "bloodType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "organType",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "tissueMarkers",
+                "type": {
+                  "type-name": "Bytes",
+                  "length": 32
+                }
+              },
+              {
+                "name": "isActive",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "witnesses": [
+  ],
+  "contracts": [
+  ]
+}
