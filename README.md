@@ -1,3 +1,5 @@
+![alt text](image.png)
+
 # Private Organ Donor Registry 🫀
 
 A privacy-preserving organ donor registry built on the **Midnight Network**. This application allows individuals to register as organ donors and prove compatibility with recipients without revealing their sensitive medical data to the public.
