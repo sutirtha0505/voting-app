@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "npm run copy-organ-donor-keys && vite build",
+    "build": "npm run copy-contract-keys && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "copy-contract-keys": "mkdir -p ./public/midnight/voting/keys && mkdir -p ./public/midnight/voting/zkir && cp -r ../voting-contract/src/managed/voting/keys/* ./public/midnight/voting/keys && cp -r ../voting-contract/src/managed/voting/zkir/* ./public/midnight/voting/zkir",

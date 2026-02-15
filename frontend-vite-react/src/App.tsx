@@ -11,14 +11,11 @@ declare module "@tanstack/react-router" {
   }
 }
 
-import { BrowserOrganDonorProvider } from "@/modules/midnight/organ-donor-sdk/contexts/BrowserOrganDonorProvider";
-import { OrganDonorApp } from "@/components/OrganDonorApp";
+
 
 function App() {
   return (
-    <BrowserOrganDonorProvider>
-      <OrganDonorApp />
-    </BrowserOrganDonorProvider>
+    <RouterProvider router={router} />
   );
 }
 
