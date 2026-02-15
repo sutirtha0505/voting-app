@@ -135,9 +135,13 @@ export const OrganDonorApp = () => {
               </button>
           </div>
           {error && <div className="text-red-500 mt-2">{error}</div>}
-          {contractState && (
+          {contractState ? (
               <div className="mt-2 p-2 bg-blue-100 rounded">
                   <strong>Total Donors Registered:</strong> {contractState.totalDonors.toString()}
+              </div>
+          ) : (
+              <div className="mt-2 p-2 bg-gray-100 rounded text-gray-500 italic">
+                  Join a contract to see statistics
               </div>
           )}
       </div>
