@@ -4,21 +4,25 @@ import { RefreshCw, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
-import { useContractSubscription } from "@/modules/midnight/counter-sdk/hooks/use-contract-subscription";
+import { useContractSubscription } from "@/modules/midnight/voting-sdk/hooks/use-contract-subscription";
+import { useOrganDonor } from "@/modules/midnight/organ-donor-sdk/hooks/useOrganDonor";
 
 export const Counter = () => {
   const { deployedContractAPI, derivedState, onDeploy, providers } =
     useContractSubscription();
+  const { registerDonor, proveCompatibility, deactivateDonor, joinContract } = useOrganDonor();
   const [deployedAddress, setDeployedAddress] = useState<string | undefined>(
     undefined
   );
+  const [organContractAddress, setOrganContractAddress] = useState("");
   const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
-    if (derivedState?.round !== undefined) {
-      setAppLoading(false);
-    }
-  }, [derivedState?.round]);
+    // if (derivedState?.round !== undefined) {
+    //   setAppLoading(false);
+    // }
+    setAppLoading(false);
+  }, []);
 
   const deployNew = async () => {
     const { address } = await onDeploy();
@@ -29,6 +33,75 @@ export const Counter = () => {
     if (deployedContractAPI) {
       await deployedContractAPI.increment();
     }
+  };
+  
+  // Organ Donor Functions
+  const handleJoinOrganContract = async () => {
+    if (organContractAddress) {
+        await joinContract(organContractAddress);
+    }
+  };
+
+  const handleRegister = async () => {
+      const bloodType = new TextEncoder().encode("O+").slice(0, 32);
+      const organType = new TextEncoder().encode("kidney").slice(0, 32);
+      const tissueMarkers = new TextEncoder().encode("marker1").slice(0, 32);
+      
+      // Pad with zeros to 32 bytes
+      const pad = (arr: Uint8Array) => {
+          const padded = new Uint8Array(32);
+          padded.set(arr);
+          return padded;
+      };
+
+      await registerDonor(pad(bloodType), pad(organType), pad(tissueMarkers));
+      console.log("Donor Registered");
+  };
+
+  const handleProve = async () => {
+      // Mock data for proof
+       const bloodType = new TextEncoder().encode("O+").slice(0, 32);
+      const organType = new TextEncoder().encode("kidney").slice(0, 32);
+      const tissueMarkers = new TextEncoder().encode("marker1").slice(0, 32);
+
+       const pad = (arr: Uint8Array) => {
+          const padded = new Uint8Array(32);
+          padded.set(arr);
+          return padded;
+      };
+      
+      const donorRecord = {
+          bloodType: pad(bloodType),
+          organType: pad(organType),
+          tissueMarkers: pad(tissueMarkers),
+          isActive: true
+      };
+
+      const result = await proveCompatibility(donorRecord, pad(bloodType), pad(organType), pad(tissueMarkers));
+      console.log("Compatibility Proved:", result);
+  };
+
+  const handleDeactivate = async () => {
+      // Mock record to deactivate - in real app would come from state/query
+       const bloodType = new TextEncoder().encode("O+").slice(0, 32);
+      const organType = new TextEncoder().encode("kidney").slice(0, 32);
+      const tissueMarkers = new TextEncoder().encode("marker1").slice(0, 32);
+
+      const pad = (arr: Uint8Array) => {
+          const padded = new Uint8Array(32);
+          padded.set(arr);
+          return padded;
+      };
+
+       const donorRecord = {
+          bloodType: pad(bloodType),
+          organType: pad(organType),
+          tissueMarkers: pad(tissueMarkers),
+          isActive: true
+      };
+
+      await deactivateDonor(donorRecord);
+      console.log("Donor Deactivated");
   };
 
   return (
@@ -58,56 +131,48 @@ export const Counter = () => {
           <CardContent>
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button onClick={deployNew} className="gap-2">
+                {/* Counter logic commented out as we are using Voting SDK subscription which has different state */}
+                {/* <Button onClick={deployNew} className="gap-2">
                   <PlusCircle className="w-5 h-5" />
                   <span>Deploy New Contract</span>
-                </Button>
+                </Button> */}
               </div>
 
-              {deployedAddress && (
+              {/* {deployedAddress && (
                 <div className="p-4 bg-muted rounded-lg">
                   <p className="text-sm font-medium text-muted-foreground mb-1">Deployed Contract</p>
                   <p className="text-sm font-mono break-all">{deployedAddress}</p>
                 </div>
-              )}
+              )} */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                <Card>
+                {/* <Card>
                   <CardContent className="pt-6">
                     <p className="text-sm font-medium text-muted-foreground mb-1">Counter Value</p>
                     <p className="text-2xl font-bold">{derivedState?.round || '0'}</p>
                   </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-6">
-                    <p className="text-sm font-medium text-muted-foreground mb-1">Private Data</p>
-                    <p className="text-2xl font-bold">{derivedState?.privateState.privateCounter || '0'}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-6">
-                    <p className="text-sm font-medium text-muted-foreground mb-1">Turns</p>
-                    <p className="text-sm font-mono break-all">{derivedState?.turns.increment || 'idle'}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-6">
-                    <p className="text-sm font-medium text-muted-foreground mb-1">Contract Address</p>
-                    <p className="text-sm font-mono break-all">{deployedContractAPI?.deployedContractAddress || 'Not deployed'}</p>
-                  </CardContent>
-                </Card>
+                </Card> */}
+                {/* ... other counter cards ... */}
               </div>
 
-              <div className="flex justify-center mt-6">
-                <Button
-                  onClick={increment}
-                  disabled={!deployedContractAPI}
-                  variant={deployedContractAPI ? "default" : "secondary"}
-                  className="gap-2"
-                >
-                  <RefreshCw className="w-5 h-5" />
-                  <span>Increment Counter</span>
-                </Button>
+
+              <div className="border-t pt-6 mt-6">
+                <h3 className="text-lg font-semibold mb-4 text-center">Organ Donor Contract Integration</h3>
+                 <div className="flex gap-2 justify-center mb-4">
+                    <input 
+                        type="text" 
+                        placeholder="Organ Contract Address" 
+                        className="border p-2 rounded"
+                        value={organContractAddress}
+                        onChange={(e) => setOrganContractAddress(e.target.value)}
+                    />
+                    <Button onClick={handleJoinOrganContract}>Join Organ Contract</Button>
+                </div>
+                <div className="flex flex-wrap gap-4 justify-center">
+                    <Button onClick={handleRegister} variant="outline">Register Donor</Button>
+                    <Button onClick={handleProve} variant="outline">Prove Compatibility</Button>
+                    <Button onClick={handleDeactivate} variant="destructive">Deactivate Donor</Button>
+                </div>
               </div>
 
               {providers?.flowMessage && (

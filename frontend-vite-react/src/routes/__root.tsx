@@ -10,6 +10,7 @@ export const logger = pino.pino({
 });
 
 import { BrowserVotingProvider } from "@/modules/midnight/voting-sdk/contexts/BrowserVotingProvider";
+import { BrowserOrganDonorProvider } from "@/modules/midnight/organ-donor-sdk/contexts/BrowserOrganDonorProvider";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -20,9 +21,11 @@ function RootComponent() {
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <MidnightMeshProvider logger={logger}>
         <BrowserVotingProvider>
-          <MainLayout>
-            <Outlet />
-          </MainLayout>          
+          <BrowserOrganDonorProvider>
+            <MainLayout>
+              <Outlet />
+            </MainLayout>
+          </BrowserOrganDonorProvider>
         </BrowserVotingProvider>
       </MidnightMeshProvider>
     </ThemeProvider>
